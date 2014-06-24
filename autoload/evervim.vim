@@ -182,7 +182,8 @@ function! evervim#createNoteBuf() " {{{
 
     " clear buffer
     call append(0, "")
-    call append(1, "Tags:")
+    call append(1, "Notebook:")
+    call append(2, "Tags:")
     call cursor(1,0)
     setlocal nomodified
 

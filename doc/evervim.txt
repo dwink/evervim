@@ -71,8 +71,9 @@ choice one and <CR> too, the note will be displayd.
 
 Note is formatted
  1 line is Title
- 2 line is Tags (comma deliminated)
- 3 line after body
+ 2 line is Notebook (when empty the default notebook is used)
+ 3 line is Tags (comma deliminated)
+ 4 line after body
 
 If OpenBrowser plugin installed, you can open note on browser.
 (http://www.vim.org/scripts/script.php?script_id=3133)
@@ -180,6 +181,11 @@ g:evervim_splitoption				*g:evervim_splitoption*
 		open listwindow horizontal.
 
 		Default is 'v'. It means open vertical.
+
+g:evervim_defaultnotebook
+	       Contains the name of the default notebook. If no notebook is
+	       specified when a note is created, the note is saved to this
+	       notebook.
 
 
 Edit note on markdown or XML.
