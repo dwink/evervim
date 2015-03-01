@@ -1,7 +1,7 @@
 # evervim.vim
 
 ## description:
-edit evernote on vim.
+Search, create, and edit notes on Evernote in vim!
 
 ## requires:
 * python
