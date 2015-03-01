@@ -20,25 +20,25 @@ Changelog		|evervim-changelog|
 ==============================================================================
 INTRODUCTION					*evervim-introduction*
 
-*evervim* (or *evervim.vim* ) is plugin for edit evernote(http://www.evernote.com)
-on vim. This plugin can edit evernote by markdown or law XML.
-See |:g:evervim_usemarkdown| .
+*evervim* (or *evervim.vim* ) is plugin for editing
+evernote(http://www.evernote.com) on vim. This plugin can edit evernote by
+markdown or raw XML.  See |:g:evervim_usemarkdown| .
 
 ==============================================================================
 REQUIRES					*evervim-requires*
 
 Python and vim with compiled +python and "markdown" package for python.
-Check Python is enable or not,
+To check if Python is enabled or not,
 >
 	:echo has('python')
 <
-When display '1', then python is enable.
-check "markdown" package is installed,
+When the result is '1', then python is enabled.
+To check whether the "markdown" package is installed,
 >
 	:python import markdown
 <
-When no error occured, markdown is already installed.
-How to install markdown, see below url.
+When no error occurs, markdown is already installed.
+To install markdown, see the following url:
 http://packages.python.org/Markdown/install.html
 
 ==============================================================================
@@ -46,18 +46,19 @@ INSTALL						*evervim-install*
 
 Install files into Vim script directory.
 
-Get "Developer Tokens" from Evernote Web(https://www.evernote.com/api/DeveloperToken.action)
-and set g:evervim_devtoken, evervim will initialize on start VIM.
+Get "Developer Tokens" from Evernote Web
+(https://www.evernote.com/api/DeveloperToken.action) and set
+g:evervim_devtoken. Evervim will initialize on VIM startup.
 
 vimrc example:
     let g:evervim_devtoken='S=s999:U=9ee99c9:E=999d9999c99:C=99a99a99999:P=9cd:A=en-devtoken:H=cd99999de9999c99b999d99d999cb9f9'
 
-Initialize is not yet, set g:evervim_devtoken and do
+After setting g:evervim_devtoken, use this command:
 >
 	:EvervimSetup
 <
-command, initialize evervim.
-(after initialized, added some command for evervim)
+to initialize evervim. You only need to do this once (or if you change the
+devtoken). Once initialized, the Evervim commands will be available.
 
 ==============================================================================
 USAGE						*evervim-usage*
@@ -65,16 +66,16 @@ Display NotebookList
 >
 	:EvervimNotebookList
 <
-NotebookList is displayed, choice one and <CR>,
-notes in notebook will be listed.
-choice one and <CR> too, the note will be displayd.
+The NotebookList is displayed; choose one and <CR>,
+and a split with notes in the selected notebook will be shown.
+Choose one and <CR>; the note will be displayed.
 
-Note is formatted
+A Note is formatted as follows:
  1 line is Title
- 2 line is Tags (comma deliminated)
- 3 line after body
+ 2 line is Tags (comma delimited)
+ 3 line and after is the note body
 
-If OpenBrowser plugin installed, you can open note on browser.
+If the OpenBrowser plugin installed, you can open the note in your browser.
 (http://www.vim.org/scripts/script.php?script_id=3133)
 see |:EvervimOpenBrowser|.
 ==============================================================================
@@ -106,31 +107,31 @@ COMMAND 					*evervim-commands*
 
 :EvervimCreateNote	  			*:EvervimCreateNote*
 		Open new buffer to edit new note.
-		when buffer saved, note is saved on evernote.
+		When the buffer is written, note is saved on evernote.
 
 :EvervimOpenBrowser	  			*:EvervimOpenBrowser*
-		Open note on your browser. Use this command when open single
-		note or set cursor on notes list.
-		This command is defined only "OpenBrowser" plugin is installed.
+		Open note in your browser. Use this command from a buffer
+		containing a single note or on a selected note in a notes list.
+		This command is defined only if "OpenBrowser" plugin is installed.
 		(http://www.vim.org/scripts/script.php?script_id=3133)
 
 :EvervimOpenClient	  			*:EvervimOpenClient*
-		Open note on your windows client.
-		This command is defined only vim on windows.
+		Open note in your windows client.
+		This command is defined only for VIM on windows.
 
 :EvervimSetup					*:EvervimSetup*
 		Setup acccount.
 
 :EvervimReloadPref				*:EvervimReloadPref*
-		Reload variables. Generally, It will be not used.
+		Reload variables. Generally, should not be used.
 ------------------------------------------------------------------------------
 variables					*evervim-variables*
 
 g:evervim_devtoken				*g:evervim_devtoken*
-	        It is "Developer Tokens" string to get from Evernote Web at below.
+	        The "Developer Token" string from Evernote Web at below.
 	        https://www.evernote.com/api/DeveloperToken.action
 
-    Default is empty string.
+		Default is empty string.
 
 g:evervim_workdir				*g:evervim_workdir*
 		Work directory.
@@ -138,51 +139,51 @@ g:evervim_workdir				*g:evervim_workdir*
 		Default is $HOME/.evervim
 
 g:evervim_usemarkdown				*g:evervim_usemarkdown*
-		Edit note on markdown or XML.
+		Edit note in markdown or XML.
 
-		** WARNNING: Markdown format is not keep design tags.
-		If you open already edited note (not evervim ex:web clipped note)
-		and save it on evervim, the design tags will be  loss.  **
+		** WARNING: Markdown format does not preserve design tags.  If
+		you open already an existing note (not created with evervim, i.e. a
+		web-clipped note) and save it in evervim, the design tags will be lost.  **
 
-		defalult is '1'. It means use markdown.
+		Default is '1'. It means use markdown.
 
 g:evervim_sortbooks				*g:evervim_sortnotebooks*
 		Sort pattern of notebooks. It can use below values.
 		(name | serviceCreated | serviceUpdated) (asc | desc)
 
 		Default is 'name asc'.
-		It means name desc.
+		It means the list is sorted by name in ascending (A-Z) order.
 
 g:evervim_sorttags				*g:evervim_sorttags*
 		Sort pattern of tags. It can use below values.
 		(name) (asc | desc)
 
 		Default is 'name asc'.
-		It means name desc.
+		It means the tags are sorted by name in ascending (A-Z) order
 
 g:evervim_xmlindent				*g:evervim_xmlindent*
-		When you edit note on XML, indent of XML.
+		When you edit a note in XML, use this string for each indent of the XML.
 
 		Default is '    '.
 
 g:evervim_asyncupdate				*g:evervim_asyncupdate*
-		This value means When save note,
-		asynchronous update to evernote or not.
+		This value enables or disables asynchronous update to evernote
+		when saving notes.
 
-		Default is '0'. It means not asynchronous update.
-		Asynchronous update is not runnning multi.
-		So if one thread runnning, not update to evernote.
-		Next timing of saving buffer, update to evernote.
+		Default is '0', or synchronous updates.
+		NOTE: With asynchronous updates on, Evervim will not perform
+		multiple updates simultaneously; if one update thread is
+		already runnning, Evervim will skip the update to Evernote.
+		You will need to write the buffer again to update the buffer on Evernote.
 
 g:evervim_splitoption				*g:evervim_splitoption*
 		Open ListWindowmode, if
 		let g:evervim_splitoption=''
-		open listwindow horizontal.
+		Evervim will open listwindows using a horizontal split.
 
-		Default is 'v'. It means open vertical.
+		Default is 'v'. It means open list windows using vertical
+		splits.
 
-
-Edit note on markdown or XML.
 
 ==============================================================================
 TODO						*evervim-todo*
