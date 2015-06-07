@@ -10,6 +10,8 @@ from markdown.inlinepatterns import Pattern
 from markdown.util import etree
 import logging
 
+logging.basicConfig(level=logging.DEBUG, filename="evervim.log")
+
 TODOPATTERN= r'\[(X| )\]'
 class ENMLToDoPattern(Pattern):
 
@@ -57,6 +59,7 @@ removefootercode = re.compile('</code>$')
 
 
 def parseENML(node, level=0, result='', option=parserOption()):  # {{{
+    logging.debug(node.toxml())
 # import html2text
 #   return html2text.html2text(node.toxml())
 #   print node.toxml()
@@ -110,6 +113,8 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
             result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
             result += "\n"
             option.p = False
+        elif tag == "br":
+            result += "  \n"
         elif tag == "li":
             option.count += 1
             if option.ul:
@@ -142,8 +147,8 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
             else:
                 result += _getData(node)
 #           if not ( option.a == True or option.code == False ):
-            if option.a == False:
-                result += "\n"
+            #if option.a == False:
+                #result += "\n"
     return result
 #}}}
 
