@@ -5,7 +5,28 @@
 import markdown
 import xml.sax.saxutils
 import re
+from markdown.extensions import Extension
+from markdown.inlinepatterns import Pattern
+from markdown.util import etree
+import logging
 
+TODOPATTERN= r'\[(X| )\]'
+class ENMLToDoPattern(Pattern):
+
+    def handleMatch(self, m):
+        el = etree.Element("en-todo")
+        logging.debug("Groups: {}".format(m.groups()))
+        if m.group(2) == 'X':
+            el.set("checked", "true")
+        return el
+
+
+class ENMLExtension(Extension):
+
+    def extendMarkdown(self, md, md_globals):
+
+        md.inlinePatterns.add(
+            'enml', ENMLToDoPattern(TODOPATTERN), "<linebreak" )
 
 class parserOption:  # {{{
     def __init__(self):
@@ -100,7 +121,14 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
             result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
             result += "\n"
             option.blockquote -= 1
-        elif tag in ["img", "en-media", "en-todo", "en-crypt"]:  # 後で改行を除去して見やすくする？
+        elif tag == "en-todo":
+            result += "["
+            if node.getAttribute("checked") == "true":
+                result += "X"
+            else:
+                result += " "
+            result += "] "
+        elif tag in ["img", "en-media", "en-crypt"]:  # 後で改行を除去して見やすくする？
             return node.toxml() + "\n"
         elif tag in ["h1", "h2", "h3", "h4", "h5", "h6"]:
             headerlv = tag[1:]
@@ -121,7 +149,8 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
 
 
 def parseMarkdown(mkdtext):  # {{{
-    m = markdown.markdown(mkdtext.decode('utf-8'))
+    m = markdown.markdown(mkdtext.decode('utf-8'), extensions=[ENMLExtension()])
+    logging.debug(m)
     return m
 #}}}
 
