@@ -25,6 +25,7 @@ class EvervimPref(object):
         self.encoding             = None
         self.asyncupdate          = None
         self.enscriptpath         = None
+        self.defaultnotebook      = None
 
     @classmethod
     def getInstance(self):
@@ -59,36 +60,51 @@ class EvervimEditor(object):
 
     def note2buffer(self, note):
         """ return strings array for buffer from note. """
-        """ note has attribute title, tagNames, content """
+        """ note has attribute title, notebook, tagNames, content """
         bufStrings = []
         pref = EvervimPref.getInstance()
         doc = minidom.parseString(note.content)
         ennote = doc.getElementsByTagName("en-note")[0]
 
+        notebooks = self.api.listNotebooks()
+        notebook = next((n for n in notebooks if n.guid == note.notebookGuid), None)
+        notebookName = notebook.name if notebook is not None else ""
+
         if pref.usemarkdown == '0':
             bufStrings.append(note.title)
+            bufStrings.append("Notebook:" + notebookName)
             bufStrings.append("Tags:" + ",".join(note.tagNames))
             contentxml = ennote.toprettyxml(indent=pref.xmlindent, encoding='utf-8')
             contentxml = re.sub('^' + pref.xmlindent, '', contentxml, flags=re.MULTILINE)
             bufStrings.extend([line for line in contentxml.splitlines()[1:-1] if line.strip()])
         else:
             bufStrings.append('# ' + note.title)
+            bufStrings.append("Notebook:" + notebookName)
             bufStrings.append("Tags:" + ",".join(note.tagNames))
             content = markdownAndENML.parseENML(ennote).encode('utf-8')
             bufStrings.extend(content.splitlines())
         return bufStrings
 
     def buffer2note(self, note, buflines):
-        """ return note that set title, tags, content from buftext """
+        """ return note that set title, notebook, tags, content from buftext """
         pref = EvervimPref.getInstance()
         if pref.usemarkdown == '0':
             note.title = buflines[0]
-            note = self.api.editTag(note, buflines[1].replace('Tags:', ''))
-            note.content  = EvernoteAPI.NOTECONTENT_HEADER + "\n".join(buflines[2:]) + EvernoteAPI.NOTECONTENT_FOOTER
+            note.content  = EvernoteAPI.NOTECONTENT_HEADER + "\n".join(buflines[3:]) + EvernoteAPI.NOTECONTENT_FOOTER
         else:
             note.title = re.sub(r'^#', '',buflines[0]).strip()
-            note = self.api.editTag(note, buflines[1].replace('Tags:', ''))
-            parsedContent = markdownAndENML.parseMarkdown("\n".join(buflines[2:]))
+            parsedContent = markdownAndENML.parseMarkdown("\n".join(buflines[3:]))
             note.content  = EvernoteAPI.NOTECONTENT_HEADER + parsedContent.encode('utf-8') + EvernoteAPI.NOTECONTENT_FOOTER
+
+        notebookName = buflines[1].replace('Notebook:', '').strip()
+        if notebookName == "" and pref.defaultnotebook is not None:
+            notebookName = pref.defaultnotebook
+
+        notebooks = self.api.listNotebooks()
+        notebook = next((n for n in notebooks if n.name == notebookName), None)
+        if notebook is not None:
+            note.notebookGuid = notebook.guid
+
+        note = self.api.editTag(note, buflines[2].replace('Tags:', ''))
 
         return note

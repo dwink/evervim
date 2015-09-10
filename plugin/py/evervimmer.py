@@ -52,6 +52,7 @@ class Evervimmer(object):
         self.pref.asyncupdate          = vim.eval("g:evervim_asyncupdate")
         self.pref.encoding             = vim.eval('&enc')
         self.pref.enscriptpath         = None
+        self.pref.defaultnotebook      = vim.eval("g:evervim_defaultnotebook")
     # }}}
 
     def setAPI(self):  # {{{
